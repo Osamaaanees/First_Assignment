@@ -8,9 +8,11 @@ employees = [
     {"name": "Hamza", "age": 24, "salary": 60000}
 ]
 
-def filter_high_earning_employees(employee_list, threshold=60000):
-    """Filters employees earning above the given threshold."""
-    return [emp for emp in employee_list if emp["salary"] > threshold]
+def filter_high_salary(employees, threshold=60000):
+  return [emp for emp in employees if emp["salary"] > threshold]
 
-high_earners = filter_high_earning_employees(employees)
-print(high_earners)
+high_earners = filter_high_salary(employees)
+
+print("Employees earning more than 60,000:")
+for emp in high_earners:
+  print(f"{emp['name']} - Salary: {emp['salary']}")
