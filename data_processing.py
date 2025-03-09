@@ -12,6 +12,5 @@ def filter_high_earning_employees(employee_list, threshold=60000):
     """Filters employees earning above the given threshold."""
     return [emp for emp in employee_list if emp["salary"] > threshold]
 
-# Example usage
 high_earners = filter_high_earning_employees(employees)
 print(high_earners)
