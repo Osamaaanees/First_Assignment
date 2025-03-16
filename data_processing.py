@@ -1,4 +1,3 @@
-
 employees = [{"name": "Ehsan", "age": 35, "salary": 300000},
     {"name": "Sajad", "age": 26, "salary": 195000},
     {"name": "Rizwan", "age": 31, "salary": 185000},
