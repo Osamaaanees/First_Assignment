@@ -1,49 +1,67 @@
 import logging
+import pandas as pd
+import argparse
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-employees = [{"name": "Ehsan", "age": 35, "salary": 300000},
-    {"name": "Sajad", "age": 26, "salary": 195000},
-    {"name": "Rizwan", "age": 31, "salary": 185000},
-    {"name": "Imran", "age": 55, "salary": 37000},
-    {"name": "Usama", "age": 26, "salary": 85000},
-    {"name": "Imad", "age": 24, "salary": 55000},
-    {"name": "Hamza", "age": 24, "salary": 60000},
-]
+class EmployeeManager:
+    def __init__ (self, filename="employees.csv"):
+        self.filename = filename
+        self.employees = self.load_employees()
 
-def group_employees_by_age(employees):
-    category = {"young": [], "mid": [], "senior": []}
+    def load_employees(self):
+        try:
+            df = pd.read_csv(self.filename)
+            return df.to_dict(orient="records")
+        except FileNotFoundError:
+            logging.error(f"Error: File '{self.filename}' not found")
+            return []
+    
+    def group_employees_by_age(self):
+        category = {"young": [], "mid": [], "senior": []}
+        for employee in self.employees:
+            if employee ['age'] < 30:
+                category ["young"].append(employee)
+            elif 30 <= employee['age'] <= 39:
+                category ["mid"].append(employee)
+            else:
+                category ["senior"].append(employee)
 
-    for emp in employees:
-        if emp['age'] < 30:
-            category["young"].append(emp)
-        elif 30 <= emp['age'] <= 39:
-            category["mid"].append(emp)
-        else:
-            category["senior"].append(emp)
-    return category
-age_group = group_employees_by_age(employees)
-logging.info ("Under 30 Employees")
-for emp in age_group["young"]:
-    logging.info(f"{emp['name']} - Age {emp['age']}")    
-logging.info ("Mid-Aged Employees")
-for emp in age_group["mid"]:
-    logging.info(f"{emp['name']} - Age {emp['age']}")
-logging.info ("Senior Employees")
-for emp in age_group["senior"]:
-    logging.info(f"{emp['name']} - Age {emp['age']}")
-    print(" ")
+        return category
+    
+    def employees_salary(self, threshold = 60000):
+        high_earners = []
+        for employee in self.employees:
+            if employee["salary"] > threshold:
+                high_earners.append(employee)
+        return high_earners
+    
+    def log_employee_groups(self):
+        age_group = self.group_employees_by_age()
+        logging.info("Under 30 Employees:")
+        for employee in age_group["young"]:
+            logging.info(f"{employee['name']} - Age {employee['age']}")
+        
+        logging.info("Mid-Aged Employees:")
+        for employee in age_group["mid"]:
+            logging.info(f"{employee['name']} - Age {employee['age']}")
 
+        logging.info("Senior Employees:")
+        for employee in age_group["senior"]:
+            logging.info(f"{employee['name']} - Age {employee['age']}")
+    
 
-def employees_salary(employees, threshold = 60000):
-    high_salary = {"high_earners" : []}
+    def log_high_salary_employees(self, threshold = 60000):
+        high_earners = self.employees_salary(threshold)
+        logging.info(f"Employees earning more than {threshold}:")
+        for employee in high_earners:
+            logging.info(f"{employee['name']} - Salary {employee['salary']}")
+        
+if __name__== "__main__":
+    parser = argparse.ArgumentParser(description= "Employees Management System (EMS)")
+    parser.add_argument("--file_name", default= "employees.csv", help= "CSV file containing employees data")
+    args = parser.parse_args()
 
-    for emp in employees:
-        if emp["salary"] > threshold:
-            high_salary["high_earners"].append(emp)
-    return high_salary
-
-executive_employees = employees_salary(employees, threshold = 60000)
-logging.info ("Higher Than 60000 Salary")
-for emp in executive_employees["high_earners"]:
-    logging.info(f"{emp['name']} - Salary {emp['salary']}")
+    manager = EmployeeManager(args.file_name)
+    manager.log_employee_groups()
+    manager.log_high_salary_employees()
