@@ -5,7 +5,7 @@ import argparse
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 class EmployeeManager:
-    def __init__ (self, filename="employees.csv"):
+    def __init__(self, filename="employees.csv"):
         self.filename = filename
         self.employees = self.load_employees()
 
@@ -20,12 +20,12 @@ class EmployeeManager:
     def group_employees_by_age(self):
         category = {"young": [], "mid": [], "senior": []}
         for employee in self.employees:
-            if employee ['age'] < 30:
-                category ["young"].append(employee)
+            if employee['age'] < 30:
+                category["young"].append(employee)
             elif 30 <= employee['age'] <= 39:
-                category ["mid"].append(employee)
+                category["mid"].append(employee)
             else:
-                category ["senior"].append(employee)
+                category["senior"].append(employee)
 
         return category
     
@@ -51,16 +51,16 @@ class EmployeeManager:
             logging.info(f"{employee['name']} - Age {employee['age']}")
     
 
-    def log_high_salary_employees(self, threshold = 60000):
+    def log_high_salary_employees(self, threshold=60000):
         high_earners = self.employees_salary(threshold)
         logging.info(f"Employees earning more than {threshold}:")
         for employee in high_earners:
             logging.info(f"{employee['name']} - Salary {employee['salary']}")
         
-if __name__== "__main__":
-    parser = argparse.ArgumentParser(description= "Employees Management System (EMS)")
+if __name__=="__main__":
+    parser=argparse.ArgumentParser(description="Employees Management System (EMS)")
     parser.add_argument("--file_name", default= "employees.csv", help= "CSV file containing employees data")
-    args = parser.parse_args()
+    args=parser.parse_args()
 
     manager = EmployeeManager(args.file_name)
     manager.log_employee_groups()
